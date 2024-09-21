@@ -3,7 +3,7 @@ package com.genai.app.gen_ai_demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.genai.app.gen_ai_demo.entity.DocEmbedding;
+import com.genai.app.gen_ai_demo.entity.DocumentChunk;
 import com.genai.app.gen_ai_demo.repository.DocEmbeddingRepository;
 
 import java.util.List;
@@ -14,7 +14,7 @@ public class DocEmbeddingService {
     @Autowired
     private DocEmbeddingRepository docEmbeddingRepository;
 
-    public List<DocEmbedding> searchDocuments(String question) {
+    public List<DocumentChunk> searchDocuments(String question) {
         // Convert the question to an embedding (implement this logic)
         List<Float> queryEmbedding = convertQuestionToEmbedding(question);
 
@@ -27,13 +27,13 @@ public class DocEmbeddingService {
         return List.of(0.1f, 0.2f, 0.3f); // Placeholder
     }
     
-    public List<DocEmbedding> similaritySearch(List<Float> queryEmbedding, int topK) {
+    public List<DocumentChunk> similaritySearch(List<Float> queryEmbedding, int topK) {
         // This is a hypothetical implementation. You would replace this with your actual
         // similarity search logic, perhaps using a native query or leveraging
         // your vector database's capabilities.
 
         // Example: Get all documents (not efficient for large datasets)
-        List<DocEmbedding> allDocuments = docEmbeddingRepository.findAll();
+        List<DocumentChunk> allDocuments = docEmbeddingRepository.findAll();
 
         // Calculate similarities and sort to get the top K
         return allDocuments.stream()

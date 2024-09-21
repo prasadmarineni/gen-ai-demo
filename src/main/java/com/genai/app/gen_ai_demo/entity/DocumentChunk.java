@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@Entity(name = "doc-embedding")
-public class DocEmbedding {
+@Entity(name = "document-chunk")
+public class DocumentChunk {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

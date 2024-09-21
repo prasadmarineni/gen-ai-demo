@@ -68,6 +68,7 @@ public class FileUploadController {
 
 			return ResponseEntity.ok().body("File uploaded successfully: " + fileName);
 		} catch (Exception e) {
+			System.err.println(e);
 			return ResponseEntity.status(500).body("File upload failed for " + fileName + ", error: " + e.getMessage());
 		}
 	}
