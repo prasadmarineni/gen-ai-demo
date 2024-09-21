@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>AI RAG Model Chat</title>
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+	<script>
+
+		$(document).ready(function () {
+
+			function fetchFileList() {
+				$('#fileListStatus-error').html('<p></p>');
+				
+				$.ajax({
+					url: '/files', // URL to fetch the list of files
+					type: 'GET',
+					success: function (files) {
+						$('#fileList').empty(); // Clear the existing list
+						files.forEach(function (file) {
+							$('#fileList').append('<li>' + file + '</li>'); // Append each file to the list
+						});
+					},
+					error: function (xhr) {
+						$('#fileListStatus-error').html('<p>Error fetching file list: ' + xhr.responseText + '</p>');
+					}
+				});
+			}
+
+			// Initial fetch of file list
+			fetchFileList();
+
+
+			$('#uploadForm').on('submit', function (event) {
+				event.preventDefault(); // Prevent the default form submission
+
+				var formData = new FormData(this); // Create a FormData object
+				
+				$('#uploadStatus').html('<p></p>');
+				$('#uploadStatus-error').html('<p></p>');
+
+				$.ajax({
+					url: '/upload', // URL to submit the form
+					type: 'POST',
+					data: formData,
+					contentType: false,
+					processData: false,
+					success: function (response) {
+						$('#uploadStatus').html('<p>' + response + '</p>');
+						fetchFileList();
+					},
+					error: function (xhr, status, error) {
+						$('#uploadStatus-error').html('<p>Error: ' + xhr.responseText + '</p>');
+					}
+				});
+			});
+
+		});
+
+		function fetchData() {
+			const userInput = document.getElementById('query').value;
+			document.getElementById('busyIndicator').style.display = 'block'; // Show busy indicator
+			document.getElementById('answer').innerText = "";
+
+			fetch(`/chat?question=${encodeURIComponent(userInput)}`)
+				.then(response => response.json())
+				.then(data => {
+					document.getElementById('answer').innerText = data.answer;
+				})
+				.catch(error => console.error('Error:', error))
+				.finally(() => {
+					document.getElementById('busyIndicator').style.display = 'none'; // Hide busy indicator
+				});
+		}
+
+
+	</script>
+
+	<style>
+		#busyIndicator {
+			display: none;
+		}
+		
+		.error {
+			color: red;
+		}
+		.success {
+			color: green;
+		}
+	</style>
+
+
+
+</head>
+
+<body>
+
+	<h1>Upload a new File(Only PDF Supported)</h1>
+	<form id="uploadForm" enctype="multipart/form-data">
+		<input type="file" name="file" accept="application/pdf" required>
+		<button type="submit">Upload</button>
+	</form>
+	<div id="uploadStatus" class="success"></div>
+	<div id="uploadStatus-error" class="error"></div>
+
+	<hr />
+
+	<h2>Files uploaded to Vector DB. Ask anything on these files?</h2>
+	<ul id="fileList"></ul>
+	<div id="fileListStatus-error" class="error"></div>
+
+	<hr />
+
+	<h1>Ask something about the your documents</h1>
+	<textarea type="text" id="query" text="Ask something about the your documents?"
+		placeholder="Ask something about the your documents?" rows="5" cols="70"></textarea>
+	<br /><br />
+	<button onclick="fetchData()">Chat</button>
+
+	<p id="busyIndicator">Loading...</p> <!-- Busy indicator -->
+
+	<h2>Answer:</h2> 
+	<br /> 
+	<p><span id="answer"></span></p>
+
+	<br />
+	<hr />
+
+</body>
+
+</html>
