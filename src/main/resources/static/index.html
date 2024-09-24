@@ -13,7 +13,7 @@
 		$(document).ready(function () {
 
 			hideBusy();
-			
+
 			function fetchFileList() {
 				$('#fileListStatus-error').html('<p></p>');
 
@@ -131,6 +131,34 @@
 			/* On top of everything */
 			font-size: 1.2em;
 		}
+
+		/* Container for the 2 vertical sections */
+		.container {
+			display: flex;
+			height: 100vh;
+		}
+
+		/* Left and right vertical sections */
+		.left,
+		.right {
+			flex: 1;
+			padding: 8px;
+		}
+
+		.left {
+			background-color: #f0f0f0;
+			/* Light grey for the left side */
+		}
+
+		.right {
+			background-color: #e0e0e0;
+			/* Slightly darker grey for the right side */
+		}
+
+		button {
+			padding: 10px 20px;
+			font-size: 1em;
+		}
 	</style>
 
 
@@ -139,28 +167,7 @@
 
 <body>
 
-	<h1>Upload a new File(Only PDF Supported)</h1>
-	<form id="uploadForm" enctype="multipart/form-data">
-		<input type="file" name="file" accept="application/pdf" required>
-		<button type="submit">Upload</button>
-	</form>
-	<div id="uploadStatus" class="success"></div>
-	<div id="uploadStatus-error" class="error"></div>
-
-	<hr />
-
-	<h2>Files uploaded to Vector DB. Ask anything on these files?</h2>
-	<ul id="fileList"></ul>
-	<div id="fileListStatus-error" class="error"></div>
-
-	<hr />
-
-	<h1>Ask something about the your documents</h1>
-	<textarea type="text" id="query" text="Ask something about the your documents?"
-		placeholder="Ask something about the your documents?" rows="5" cols="70"></textarea>
-	<br /><br />
-	<button onclick="fetchData()">Chat</button>
-
+	<h2>Gen AI Demo with Spring AI</h2>
 
 	<!-- Full-page overlay -->
 	<div id="overlay"></div>
@@ -168,12 +175,50 @@
 	<!-- Loading indicator -->
 	<div id="busyIndicator">Processing...</div>
 
-	<h2>Answer:</h2>
+	<!-- Vertically divided page -->
+	<div class="container">
+		<!-- Left section -->
+		<div class="left">
 
-	<p><span id="answer"></span></p>
+			<h3>Upload a new File(Only PDF Supported)</h3>
+			<hr />
+			<form id="uploadForm" enctype="multipart/form-data">
+				<input type="file" name="file" accept="application/pdf" required>
+				<button type="submit">Upload</button>
+			</form>
+			<div id="uploadStatus" class="success"></div>
+			<div id="uploadStatus-error" class="error"></div>
 
-	<br />
-	<hr />
+			<h3>Ask something about the your documents</h3>
+			<hr />
+			<br />
+			<textarea type="text" id="query" text="Ask something about the your documents?"
+				placeholder="Ask something about the your documents?" rows="5" cols="75"></textarea>
+			<br /><br />
+			<button onclick="fetchData()">Chat</button>
+
+			<h3>Answer:</h3>
+			<hr />
+
+			<p><span id="answer"></span></p>
+
+			<br />
+			
+
+		</div>
+
+		<!-- Right section -->
+		<div class="right">
+
+			<h3>Files uploaded to Vector DB. Ask anything on these files?</h3>
+			<hr />
+			<ul id="fileList"></ul>
+			<div id="fileListStatus-error" class="error"></div>
+
+		</div>
+	</div>
+
+
 
 </body>
 

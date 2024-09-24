@@ -2,12 +2,10 @@ package com.genai.app.gen_ai_demo.service;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,12 +14,9 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.cos.COSName;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
-import org.apache.pdfbox.text.PDFTextStripper;
-import org.springframework.ai.chat.messages.Media;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
@@ -30,8 +25,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MimeType;
-import org.springframework.util.MimeTypeUtils;
 
 import jakarta.annotation.PostConstruct;
 
@@ -206,12 +199,7 @@ public class FileProcessingService {
 
 		metaData.put("path", pdfFilePath);
 
-		Collection<Media> media = doc.getMedia();
-		List<Media> mediaList = List.of();
-		if (media != null && !media.isEmpty())
-			mediaList = new ArrayList<>(media);
-
-		return new Document(doc.getId(), removeDuplicateSpecialCharsFromText(doc.getContent()), mediaList, metaData);
+		return new Document(doc.getId(), removeDuplicateSpecialCharsFromText(doc.getContent()), List.of(), metaData);
 	}
 
 	public String removeDuplicateSpecialCharsFromText(String rawText) {
